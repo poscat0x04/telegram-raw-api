@@ -1,0 +1,49 @@
+name:                telegram-raw-api
+version:             0.1.0.0
+github:              "poscat0x04/telegram-raw-api"
+license:             BSD3
+author:              "Poscat"
+maintainer:          "poscat@mail.poscat.moe"
+copyright:           "2020 Poscat"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/poscat0x04/telegram-raw-api#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson
+- text
+- bytestring
+- servant
+- servant-client
+- servant-client-core
+- servant-multipart
+- http-media
+- http-client
+- http-client-tls
+- http-client-overrides
+- connection
+- telegram-types
+
+library:
+  source-dirs: src
+
+tests:
+  telegram-raw-api-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - telegram-raw-api
