@@ -1,13 +1,20 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE TypeOperators #-}
 
 -- | Actions that the bot can perform
-module Web.Telegram.API.Acting where
+module Web.Telegram.API.Actions where
 
+import Data.Default
 import Data.Text (Text)
+import Deriving.Aeson
+import GHC.Generics
 import Servant.API
 import Servant.Multipart
 import Web.Telegram.API.CompoundParam
+import Web.Telegram.API.Utils
 import Web.Telegram.Types
 import Web.Telegram.Types.Inline
 import Web.Telegram.Types.Input
@@ -196,3 +203,19 @@ type AnswerInlineQuery =
     :> QueryParam "switch_pm_text" Text
     :> QueryParam "switch_pm_parameter" Text
     :> Get '[JSON] (ReqResult Bool)
+
+data InlineQueryAnswer
+  = InlineQueryAnswer
+      { inlineQueryId :: Text,
+        results :: [InlineQueryResult],
+        cacheTime :: Maybe Integer,
+        isPersonal :: Maybe Bool,
+        nextOffset :: Maybe Text,
+        switchPmText :: Maybe Text,
+        switchPmParameter :: Maybe Text
+      }
+  deriving (Show, Eq, Generic)
+  deriving anyclass (Default)
+  deriving
+    (ToJSON, FromJSON)
+    via Snake InlineQueryAnswer
