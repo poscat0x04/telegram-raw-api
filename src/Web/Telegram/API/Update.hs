@@ -10,6 +10,7 @@ module Web.Telegram.API.Update where
 import Data.Text (Text)
 import Deriving.Aeson
 import Servant.API
+import Web.Telegram.API.Common
 import Web.Telegram.Types
 import Web.Telegram.Types.Stock
 import Web.Telegram.Types.Update
@@ -27,7 +28,8 @@ data Polling
     via Snake Polling
 
 type GetUpdates =
-  "getUpdates"
+  Base
+    :> "getUpdates"
     :> ReqBody '[JSON] Polling
     :> Get '[JSON] (ReqResult [Update])
 
@@ -43,14 +45,17 @@ data WebhookSetting
     via Snake WebhookSetting
 
 type SetWebhook =
-  "setWebhook"
+  Base
+    :> "setWebhook"
     :> ReqBody '[JSON] WebhookSetting
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteWebhook =
-  "deleteWebhook"
+  Base
+    :> "deleteWebhook"
     :> Get '[JSON] (ReqResult Bool)
 
 type GetWebhookInfo =
-  "getWebhookInfo"
+  Base
+    :> "getWebhookInfo"
     :> Get '[JSON] (ReqResult WebhookInfo)

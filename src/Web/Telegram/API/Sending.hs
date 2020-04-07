@@ -12,6 +12,7 @@ import Data.Text (Text)
 import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
+import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
   ( ChatId (..),
@@ -39,7 +40,8 @@ type MessageR =
     :> MessageR'
 
 type SendMessage =
-  "sendMessage"
+  Base
+    :> "sendMessage"
     :> ReqBody '[JSON] Message
     :> Res
 
@@ -59,7 +61,8 @@ data Message
     via Snake Message
 
 type ForwardMessage =
-  "forwardMessage"
+  Base
+    :> "forwardMessage"
     :> ReqBody '[JSON] FwdMessage
     :> Res
 
@@ -76,7 +79,8 @@ data FwdMessage
     via Snake FwdMessage
 
 type SendPhoto =
-  "sendPhoto"
+  Base
+    :> "sendPhoto"
     :> ReqBody '[JSON] (PhotoMessage Text)
     :> Res
 
@@ -97,14 +101,16 @@ data PhotoMessage a
     via Snake (PhotoMessage a)
 
 type SendPhoto' photo =
-  "sendPhoto"
+  Base
+    :> "sendPhoto"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Photo
     :> QueryParam "caption" Text
     :> MessageR
 
 type SendAudio =
-  "sendAudio"
+  Base
+    :> "sendAudio"
     :> ReqBody '[JSON] (AudioMessage Text)
     :> Res
 
@@ -127,7 +133,8 @@ data AudioMessage a
     via Snake (AudioMessage a)
 
 type SendAudio' audio =
-  "sendAudio"
+  Base
+    :> "sendAudio"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Audio
     :> QueryParam "caption" Text
@@ -138,7 +145,8 @@ type SendAudio' audio =
     :> MessageR
 
 type SendDocument =
-  "sendDocument"
+  Base
+    :> "sendDocument"
     :> ReqBody '[JSON] (DocumentMessage Text)
     :> Res
 
@@ -158,14 +166,16 @@ data DocumentMessage a
     via Snake (DocumentMessage a)
 
 type SendDocument' doc =
-  "sendDocument"
+  Base
+    :> "sendDocument"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Doc
     :> QueryParam "caption" Text
     :> MessageR
 
 type SendVideo =
-  "sendVideo"
+  Base
+    :> "sendVideo"
     :> ReqBody '[JSON] (VideoMessage Text)
     :> Res
 
@@ -186,7 +196,8 @@ data VideoMessage a
   deriving (Show, Eq, Generic, Default)
 
 type SendVideo' =
-  "sendVideo"
+  Base
+    :> "sendVideo"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Video
     :> QueryParam "duration" Integer
@@ -197,7 +208,8 @@ type SendVideo' =
     :> MessageR
 
 type SendAnimation =
-  "sendAnimation"
+  Base
+    :> "sendAnimation"
     :> ReqBody '[JSON] (AnimationMessage Text)
     :> Res
 
@@ -220,7 +232,8 @@ data AnimationMessage a
     via Snake (AnimationMessage a)
 
 type SendAnimation' =
-  "sendAnimation"
+  Base
+    :> "sendAnimation"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Animation
     :> QueryParam "duration" Integer
@@ -230,7 +243,8 @@ type SendAnimation' =
     :> MessageR
 
 type SendVoice =
-  "sendVoice"
+  Base
+    :> "sendVoice"
     :> ReqBody '[JSON] (VoiceMessage Text)
     :> Res
 
@@ -251,7 +265,8 @@ data VoiceMessage a
     via Snake (VoiceMessage a)
 
 type SendVoice' =
-  "sendVoice"
+  Base
+    :> "sendVoice"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Voice
     :> QueryParam "duration" Integer
@@ -259,7 +274,8 @@ type SendVoice' =
     :> MessageR
 
 type SendVideoNote =
-  "sendVideoNote"
+  Base
+    :> "sendVideoNote"
     :> ReqBody '[JSON] (VideoNoteMessage Text)
     :> Res
 
@@ -278,7 +294,8 @@ data VideoNoteMessage a
   deriving (ToJSON) via Snake (VideoNoteMessage a)
 
 type SendVideoNote' =
-  "sendVideoNote"
+  Base
+    :> "sendVideoNote"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem VideoNote
     :> QueryParam "duration" Integer
@@ -286,7 +303,8 @@ type SendVideoNote' =
     :> MessageR
 
 type SendMediaGroup =
-  "sendMediaGroup"
+  Base
+    :> "sendMediaGroup"
     :> QueryR "chat_id" ChatId
     :> CompoundParams Mem "media" VideoOrPhoto
     :> QueryParam "disable_notification" Bool
@@ -294,7 +312,8 @@ type SendMediaGroup =
     :> Get '[JSON] (ReqResult [T.Message])
 
 type SendLocation =
-  "sendLocation"
+  Base
+    :> "sendLocation"
     :> ReqBody '[JSON] LocationMessage
     :> Res
 
@@ -314,7 +333,8 @@ data LocationMessage
     via Snake LocationMessage
 
 type EditMessageLiveLocation =
-  "editMessageLiveLocation"
+  Base
+    :> "editMessageLiveLocation"
     :> ReqBody '[JSON] LocationEdit
     :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
 
@@ -333,7 +353,8 @@ data LocationEdit
     via Snake LocationEdit
 
 type StopMessageLiveLocation =
-  "stopMessageLiveLocation"
+  Base
+    :> "stopMessageLiveLocation"
     :> ReqBody '[JSON] LocationStop
     :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
 
@@ -350,7 +371,8 @@ data LocationStop
     via Snake LocationStop
 
 type SendVenue =
-  "sendVenue"
+  Base
+    :> "sendVenue"
     :> ReqBody '[JSON] VenueMessage
     :> Res
 
@@ -373,7 +395,8 @@ data VenueMessage
     via Snake VenueMessage
 
 type SendContact =
-  "sendContact"
+  Base
+    :> "sendContact"
     :> ReqBody '[JSON] ContactMessage
     :> Res
 
@@ -394,7 +417,8 @@ data ContactMessage
     via Snake ContactMessage
 
 type SendPoll =
-  "sendPoll"
+  Base
+    :> "sendPoll"
     :> ReqBody '[JSON] PollMessage
     :> Res
 
@@ -418,7 +442,8 @@ data PollMessage
     via PrefixedSnake "poll" PollMessage
 
 type SendDice =
-  "sendDice"
+  Base
+    :> "sendDice"
     :> ReqBody '[JSON] DiceMessage
     :> Res
 
@@ -435,7 +460,8 @@ data DiceMessage
     via Snake DiceMessage
 
 type SendChatAction =
-  "sendChatAction"
+  Base
+    :> "sendChatAction"
     :> ReqBody '[JSON] ChatAction
     :> Get '[JSON] (ReqResult Bool)
 
@@ -463,12 +489,14 @@ data StickerMessage
     via Snake StickerMessage
 
 type SendSticker =
-  "sendSticker"
+  Base
+    :> "sendSticker"
     :> ReqBody '[JSON] StickerMessage
     :> Res
 
 type SendSticker' sticker =
-  "sendSticker"
+  Base
+    :> "sendSticker"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Sticker
     :> MessageR'

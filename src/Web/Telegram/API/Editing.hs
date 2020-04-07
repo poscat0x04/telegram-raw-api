@@ -12,6 +12,7 @@ import Data.Text (Text)
 import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
+import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
 import Web.Telegram.Types.Input
@@ -22,7 +23,8 @@ type Res =
   Get '[JSON] (ReqResult (ReqEither Bool Message))
 
 type EditMessageText =
-  "editMessageText"
+  Base
+    :> "editMessageText"
     :> ReqBody '[JSON] TextEdit
     :> Res
 
@@ -43,7 +45,8 @@ data TextEdit
     via Snake TextEdit
 
 type EditMessageCaption =
-  "editMessageCaption"
+  Base
+    :> "editMessageCaption"
     :> CaptionEdit
     :> Res
 
@@ -63,7 +66,8 @@ data CaptionEdit
     via Snake CaptionEdit
 
 type EditMessageMedia =
-  "editMessageMedia"
+  Base
+    :> "editMessageMedia"
     :> QueryParam "chat_id" ChatId
     :> QueryParam "message_id" Integer
     :> QueryParam "inline_message_id" Text
@@ -84,7 +88,8 @@ data MediaEdit
     via Snake MediaEdit
 
 type EditMessageReplyMarkup =
-  "editMessageReplyMarkup"
+  Base
+    :> "editMessageReplyMarkup"
     :> ReqBody '[JSON] MarkupEdit
     :> Res
 
@@ -101,7 +106,8 @@ data MarkupEdit
     via Snake MarkupEdit
 
 type StopPoll =
-  "stopPoll"
+  Base
+    :> "stopPoll"
     :> ReqBody '[JSON] PollStop
     :> Get '[JSON] (ReqResult Poll)
 
@@ -117,7 +123,8 @@ data PollStop
     via Snake PollStop
 
 type DeleteMessage =
-  "deleteMessage"
+  Base
+    :> "deleteMessage"
     :> QueryR "chat_id" ChatId
     :> QueryR "message_id" Integer
     :> Get '[JSON] (ReqResult Bool)

@@ -12,6 +12,7 @@ import Data.Text (Text)
 import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
+import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
 import Web.Telegram.Types.Inline
@@ -19,7 +20,8 @@ import Web.Telegram.Types.Input
 import Web.Telegram.Types.Stock
 
 type KickChatMember =
-  "kickChatmember"
+  Base
+    :> "kickChatmember"
     :> ReqBody '[JSON] Kick
     :> Get '[JSON] (ReqResult Bool)
 
@@ -35,7 +37,8 @@ data Kick
     via Snake Kick
 
 type UnbanChatMember =
-  "unbanChatMember"
+  Base
+    :> "unbanChatMember"
     :> ReqBody '[JSON] Unban
     :> Get '[JSON] (ReqResult Bool)
 
@@ -50,7 +53,8 @@ data Unban
     via Snake Unban
 
 type RestrictChatMember =
-  "restrictChatMember"
+  Base
+    :> "restrictChatMember"
     :> ReqBody '[JSON] Restriction
     :> Get '[JSON] (ReqResult Bool)
 
@@ -67,7 +71,8 @@ data Restriction
     via Snake Restriction
 
 type PromoteChatMember =
-  "promoteChatMember"
+  Base
+    :> "promoteChatMember"
     :> ReqBody '[JSON] Promotion
     :> Get '[JSON] (ReqResult Bool)
 
@@ -90,76 +95,89 @@ data Promotion
     via Snake Promotion
 
 type SetChatAdministratorCustomTitle =
-  "setChatAdministratorCustomTitle"
+  Base
+    :> "setChatAdministratorCustomTitle"
     :> QueryR "chat_id" ChatId
     :> QueryR "user_id" Integer
     :> QueryParam "custom_title" Text
     :> Get '[JSON] (ReqResult Bool)
 
 type SetChatPermissions =
-  "setChatPermissions"
+  Base
+    :> "setChatPermissions"
     :> QueryR "chat_id" ChatId
     :> QueryR "permissions" ChatPermissions
     :> Get '[JSON] (ReqResult Bool)
 
 type ExportChatInviteLink =
-  "exportChatInviteLink"
+  Base
+    :> "exportChatInviteLink"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Text)
 
 type SetChatPhoto =
-  "setChatPhoto"
+  Base
+    :> "setChatPhoto"
     :> QueryR "chat_id" ChatId
     :> CompoundParam Mem "photo" InputFile
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteChatPhoto =
-  "deleteChatPhoto"
+  Base
+    :> "deleteChatPhoto"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Bool)
 
 type SetChatTitle =
-  "setChatTitle"
+  Base
+    :> "setChatTitle"
     :> QueryR "chat_id" ChatId
     :> QueryR "title" Text
     :> Get '[JSON] (ReqResult Bool)
 
 type SetChatDescription =
-  "setChatDescription"
+  Base
+    :> "setChatDescription"
     :> QueryR "chat_id" ChatId
     :> QueryParam "description" Text
     :> Get '[JSON] (ReqResult Bool)
 
 type PinChatMessage =
-  "pinChatMessage"
+  Base
+    :> "pinChatMessage"
     :> QueryR "chat_id" ChatId
     :> QueryR "message_id" Integer
     :> QueryParam "disable_notification" Bool
     :> Get '[JSON] (ReqResult Bool)
 
 type UnpinChatMessage =
-  "unpinChatMessage"
+  Base
+    :> "unpinChatMessage"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Bool)
 
 type LeaveChat =
-  "leaveChat"
+  Base
+    :> "leaveChat"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Bool)
 
 type SetChatStickerSet =
-  "setChatStickerSet"
+  Base
+    :> "setChatStickerSet"
     :> QueryR "chat_id" ChatId
     :> QueryR "sticker_set_name" Text
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteChatStickerSet =
-  "deleteChatStickerSet"
+  Base
+    :> "deleteChatStickerSet"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Bool)
 
 type UploadStickerFile' png =
-  "uploadStickerFile"
+  Base
+    :> "uploadStickerFile"
     :> QueryR "user_id" Integer
     :> png
     :> Get '[JSON] (ReqResult File)
@@ -171,7 +189,8 @@ type UploadStickerFile =
   UploadStickerFile' (QueryR "png_sticker" Text)
 
 type CreateNewStickerSet' png =
-  "createNewStickerSet"
+  Base
+    :> "createNewStickerSet"
     :> QueryR "user_id" Integer
     :> QueryR "name" Text
     :> QueryR "title" Text
@@ -189,7 +208,8 @@ type CreateNewStickerSet =
   CreateNewStickerSet' (QueryR "png_sticker" Text)
 
 type AddStickerToSet' png =
-  "addStickerToSet"
+  Base
+    :> "addStickerToSet"
     :> QueryR "user_id" Integer
     :> QueryR "name" Text
     :> png
@@ -205,18 +225,21 @@ type AddStickerToSet =
   AddStickerToSet' (QueryR "png_sticker" Text)
 
 type SetStickerPositionInSet =
-  "setStickerPositionInSet"
+  Base
+    :> "setStickerPositionInSet"
     :> QueryR "sticker" Text
     :> QueryR "positon" Integer
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteStickerFromSet =
-  "deleteStickerFromSet"
+  Base
+    :> "deleteStickerFromSet"
     :> QueryR "sticker" Text
     :> Get '[JSON] (ReqResult Bool)
 
 type SetStickerSetThumb' t =
-  "setStickerSetThumb"
+  Base
+    :> "setStickerSetThumb"
     :> QueryR "name" Text
     :> QueryR "user_id" Integer
     :> t
@@ -229,7 +252,8 @@ type SetStickerSetThumb =
   SetStickerSetThumb' (QueryR "thumb" Text)
 
 type AnswerInlineQuery =
-  "answerInlineQuery"
+  Base
+    :> "answerInlineQuery"
     :> ReqBody '[JSON] InlineQueryAnswer
     :> Get '[JSON] (ReqResult Bool)
 

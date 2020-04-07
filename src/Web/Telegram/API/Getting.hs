@@ -5,50 +5,60 @@ module Web.Telegram.API.Getting where
 
 import Data.Text (Text)
 import Servant.API
+import Web.Telegram.API.Common
 import Web.Telegram.Types
 
 type GetMe =
-  "getMe"
+  Base
+    :> "getMe"
     :> Get '[JSON] (ReqResult User)
 
 type GetUserProfilePhotos =
-  "getUserProfilePhotos"
+  Base
+    :> "getUserProfilePhotos"
     :> QueryR "user_id" Integer
     :> QueryParam "offset" Integer
     :> QueryParam "limit" Integer
     :> Get '[JSON] (ReqResult UserProfilePhotos)
 
 type GetFile =
-  "getFile"
+  Base
+    :> "getFile"
     :> QueryR "file_id" Text
     :> Get '[JSON] (ReqResult File)
 
 type GetChat =
-  "getChat"
+  Base
+    :> "getChat"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Chat)
 
 type GetChatAdministrators =
-  "getChatAdministrators"
+  Base
+    :> "getChatAdministrators"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult [ChatMember])
 
 type GetChatMembersCount =
-  "getChatMembersCount"
+  Base
+    :> "getChatMembersCount"
     :> QueryR "chat_id" ChatId
     :> Get '[JSON] (ReqResult Integer)
 
 type GetChatMember =
-  "getChatMember"
+  Base
+    :> "getChatMember"
     :> QueryR "chat_id" ChatId
     :> QueryR "user_id" Integer
     :> Get '[JSON] (ReqResult ChatMember)
 
 type GetMyCommands =
-  "getMyCommands"
+  Base
+    :> "getMyCommands"
     :> Get '[JSON] (ReqResult [BotCommand])
 
 type GetStickerSet =
-  "getStickerSet"
+  Base
+    :> "getStickerSet"
     :> QueryR "name" Text
     :> Get '[JSON] (ReqResult StickerSet)
