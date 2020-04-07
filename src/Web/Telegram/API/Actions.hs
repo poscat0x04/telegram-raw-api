@@ -2,57 +2,92 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TypeOperators #-}
 
 -- | Actions that the bot can perform
 module Web.Telegram.API.Actions where
 
-import Data.Default
 import Data.Text (Text)
 import Deriving.Aeson
-import GHC.Generics
 import Servant.API
 import Servant.Multipart
 import Web.Telegram.API.CompoundParam
-import Web.Telegram.API.Utils
 import Web.Telegram.Types
 import Web.Telegram.Types.Inline
 import Web.Telegram.Types.Input
+import Web.Telegram.Types.Stock
 
 type KickChatMember =
   "kickChatmember"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
-    :> QueryParam "until_date" Integer
+    :> ReqBody '[JSON] Kick
     :> Get '[JSON] (ReqResult Bool)
+
+data Kick
+  = Kick
+      { chatId :: ChatId,
+        userId :: Integer,
+        untilDate :: Maybe Integer
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Kick
 
 type UnbanChatMember =
   "unbanChatMember"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
+    :> ReqBody '[JSON] Unban
     :> Get '[JSON] (ReqResult Bool)
+
+data Unban
+  = Unban
+      { chatId :: ChatId,
+        userId :: Integer
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Unban
 
 type RestrictChatMember =
   "restrictChatMember"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
-    :> QueryR "permissions" ChatPermissions
-    :> QueryParam "until_date" Integer
+    :> ReqBody '[JSON] Restriction
     :> Get '[JSON] (ReqResult Bool)
+
+data Restriction
+  = Restriction
+      { chatId :: ChatId,
+        userId :: Integer,
+        permissions :: ChatPermissions,
+        untilDate :: Maybe Integer
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Restriction
 
 type PromoteChatMember =
   "promoteChatMember"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
-    :> QueryParam "can_change_info" Bool
-    :> QueryParam "can_post_messages" Bool
-    :> QueryParam "can_edit_messages" Bool
-    :> QueryParam "can_delete_messages" Bool
-    :> QueryParam "can_invite_users" Bool
-    :> QueryParam "can_restrict_members" Bool
-    :> QueryParam "can_pin_messages" Bool
-    :> QueryParam "can_promote_members" Bool
+    :> ReqBody '[JSON] Promotion
     :> Get '[JSON] (ReqResult Bool)
+
+data Promotion
+  = Promotion
+      { chatId :: ChatId,
+        userId :: Integer,
+        canChangeInfo :: Maybe Bool,
+        canPostMessages :: Maybe Bool,
+        canEditMessages :: Maybe Bool,
+        canDeleteMessages :: Maybe Bool,
+        canInviteUsers :: Maybe Bool,
+        canRestrictMembers :: Maybe Bool,
+        canPinMessages :: Maybe Bool,
+        canPromoteMembers :: Maybe Bool
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Promotion
 
 type SetChatAdministratorCustomTitle =
   "setChatAdministratorCustomTitle"
@@ -195,13 +230,7 @@ type SetStickerSetThumb =
 
 type AnswerInlineQuery =
   "answerInlineQuery"
-    :> QueryR "inline_query_id" Text
-    :> QueryR "results" [InlineQueryResult]
-    :> QueryParam "cache_time" Integer
-    :> QueryParam "is_personal" Bool
-    :> QueryParam "next_offset" Text
-    :> QueryParam "switch_pm_text" Text
-    :> QueryParam "switch_pm_parameter" Text
+    :> ReqBody '[JSON] InlineQueryAnswer
     :> Get '[JSON] (ReqResult Bool)
 
 data InlineQueryAnswer

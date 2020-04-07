@@ -21,6 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/posc
 dependencies:
 - base >= 4.7 && < 5
 - aeson
+- deriving-aeson
 - text
 - bytestring
 - servant
@@ -47,3 +48,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - telegram-raw-api
+    - lens

@@ -1,38 +1,66 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Web.Telegram.API.Editing where
 
+import Data.Aeson
 import Data.Text (Text)
+import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
 import Web.Telegram.Types.Input
 import Web.Telegram.Types.Interaction
+import Web.Telegram.Types.Stock
 
-type Tail =
-  QueryParam "reply_markup" InlineKeyboardMarkup
-    :> Get '[JSON] (ReqResult (ReqEither Bool Message))
+type Res =
+  Get '[JSON] (ReqResult (ReqEither Bool Message))
 
 type EditMessageText =
   "editMessageText"
-    :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
-    :> QueryParam "inline_message_id" Text
-    :> QueryR "text" Text
-    :> QueryParam "parse_mode" ParseMode
-    :> QueryParam "disable_web_page_preview" Bool
-    :> Tail
+    :> ReqBody '[JSON] TextEdit
+    :> Res
+
+data TextEdit
+  = TextE
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        text :: Text,
+        parseMode :: Maybe ParseMode,
+        disalbeWebPagePreview :: Maybe Bool,
+        replyMarkup :: Maybe InlineKeyboardMarkup
+      }
+  deriving (Show, Eq, Generic)
+  deriving anyclass (Default)
+  deriving
+    (FromJSON, ToJSON)
+    via Snake TextEdit
 
 type EditMessageCaption =
   "editMessageCaption"
-    :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
-    :> QueryParam "inline_message_id" Text
-    :> QueryParam "caption" Text
-    :> QueryParam "parse_mode" ParseMode
-    :> Tail
+    :> CaptionEdit
+    :> Res
+
+data CaptionEdit
+  = CaptionE
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        caption :: Maybe Text,
+        parseMode :: Maybe ParseMode,
+        replyMarkup :: Maybe InlineKeyboardMarkup
+      }
+  deriving (Show, Eq, Generic)
+  deriving anyclass (Default)
+  deriving
+    (FromJSON, ToJSON)
+    via Snake CaptionEdit
 
 type EditMessageMedia =
   "editMessageMedia"
@@ -40,21 +68,53 @@ type EditMessageMedia =
     :> QueryParam "message_id" Integer
     :> QueryParam "inline_message_id" Text
     :> CompoundParam Mem "media" InputMedia
-    :> Tail
+    :> Res
+
+data MediaEdit
+  = MediaE
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        media :: InputMedia
+      }
+  deriving (Show, Eq, Generic)
+  deriving anyclass (Default)
+  deriving
+    (ToJSON)
+    via Snake MediaEdit
 
 type EditMessageReplyMarkup =
   "editMessageReplyMarkup"
-    :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
-    :> QueryParam "inline_message_id" Text
-    :> Tail
+    :> ReqBody '[JSON] MarkupEdit
+    :> Res
+
+data MarkupEdit
+  = MarkupEdit
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        replyMarkup :: Maybe InlineKeyboardMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake MarkupEdit
 
 type StopPoll =
   "stopPoll"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "message_id" Integer
-    :> QueryParam "reply_markup" InlineKeyboardMarkup
+    :> ReqBody '[JSON] PollStop
     :> Get '[JSON] (ReqResult Poll)
+
+data PollStop
+  = PollStop
+      { chatId :: ChatId,
+        messageId :: Integer,
+        replyMarkup :: Maybe InlineKeyboardMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake PollStop
 
 type DeleteMessage =
   "deleteMessage"

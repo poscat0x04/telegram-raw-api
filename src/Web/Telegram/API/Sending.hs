@@ -1,28 +1,38 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TypeOperators #-}
 
 -- | Sending stuff
 module Web.Telegram.API.Sending where
 
 import Data.Text (Text)
+import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
   ( ChatId (..),
-    Message (..),
+    Default (..),
     QueryR,
     ReqEither (..),
     ReqResult (..),
   )
+import qualified Web.Telegram.Types as T
 import Web.Telegram.Types.Input
 import Web.Telegram.Types.Interaction
+import Web.Telegram.Types.Stock
 
 type MessageR' =
   QueryParam "disable_notification" Bool
     :> QueryParam "reply_to_message_id" Integer
     :> QueryParam "reply_markup" ReplyMarkup
-    :> Get '[JSON] (ReqResult Message)
+    :> Get '[JSON] (ReqResult T.Message)
+
+type Res =
+  Get '[JSON] (ReqResult T.Message)
 
 type MessageR =
   QueryParam "parse_mode" ParseMode
@@ -30,36 +40,96 @@ type MessageR =
 
 type SendMessage =
   "sendMessage"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "text" Text
-    :> QueryParam "disable_web_page_preview" Bool
-    :> MessageR
+    :> ReqBody '[JSON] Message
+    :> Res
+
+data Message
+  = Message
+      { chatId :: ChatId,
+        text :: Text,
+        disableWebPagePreview :: Maybe Bool,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Message
 
 type ForwardMessage =
   "forwardMessage"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "from_chat_id" ChatId
-    :> QueryParam "disable_notification" Bool
-    :> QueryR "message_id" Integer
-    :> Get '[JSON] (ReqResult Message)
+    :> ReqBody '[JSON] FwdMessage
+    :> Res
+
+data FwdMessage
+  = FwdMessage
+      { chatId :: ChatId,
+        fromChatId :: ChatId,
+        messageId :: Integer,
+        disableNotification :: Maybe Bool
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (FromJSON, ToJSON)
+    via Snake FwdMessage
+
+type SendPhoto =
+  "sendPhoto"
+    :> ReqBody '[JSON] (PhotoMessage Text)
+    :> Res
+
+data PhotoMessage a
+  = PM
+      { chatId :: ChatId,
+        photo :: a,
+        caption :: Maybe Text,
+        disableWebPagePreview :: Maybe Bool,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake (PhotoMessage a)
 
 type SendPhoto' photo =
   "sendPhoto"
     :> QueryR "chat_id" ChatId
-    :> photo
+    :> MultipartForm Mem Photo
     :> QueryParam "caption" Text
     :> MessageR
 
-type SendPhotoU =
-  SendPhoto' (MultipartForm Mem Photo)
+type SendAudio =
+  "sendAudio"
+    :> ReqBody '[JSON] (AudioMessage Text)
+    :> Res
 
-type SendPhoto =
-  SendPhoto' (QueryR "photo" Text)
+data AudioMessage a
+  = AudioMessage
+      { chatId :: ChatId,
+        audio :: a,
+        caption :: Maybe Text,
+        duration :: Maybe Integer,
+        performer :: Maybe Text,
+        title :: Maybe Text,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake (AudioMessage a)
 
 type SendAudio' audio =
   "sendAudio"
     :> QueryR "chat_id" ChatId
-    :> audio
+    :> MultipartForm Mem Audio
     :> QueryParam "caption" Text
     :> QueryParam "duration" Integer
     :> QueryParam "performer" Text
@@ -67,29 +137,58 @@ type SendAudio' audio =
     -- TODO: Handle thumbnail
     :> MessageR
 
-type SendAudioU =
-  SendAudio' (MultipartForm Mem Audio)
+type SendDocument =
+  "sendDocument"
+    :> ReqBody '[JSON] (DocumentMessage Text)
+    :> Res
 
-type SendAudio =
-  SendAudio' (QueryR "audio" Text)
+data DocumentMessage a
+  = DocumentMessage
+      { chatId :: ChatId,
+        document :: a,
+        caption :: Maybe Text,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake (DocumentMessage a)
 
 type SendDocument' doc =
   "sendDocument"
     :> QueryR "chat_id" ChatId
-    :> doc
+    :> MultipartForm Mem Doc
     :> QueryParam "caption" Text
     :> MessageR
 
-type SendDocumentU =
-  SendDocument' (MultipartForm Mem Doc)
+type SendVideo =
+  "sendVideo"
+    :> ReqBody '[JSON] (VideoMessage Text)
+    :> Res
 
-type SendDocument =
-  SendDocument' (QueryR "document" Text)
+data VideoMessage a
+  = VideoMessage
+      { chatId :: ChatId,
+        video :: a,
+        duration :: Maybe Integer,
+        width :: Maybe Integer,
+        height :: Maybe Integer,
+        caption :: Maybe Text,
+        supportsStreaming :: Maybe Bool,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
 
-type SendVideo' vid =
+type SendVideo' =
   "sendVideo"
     :> QueryR "chat_id" ChatId
-    :> vid
+    :> MultipartForm Mem Video
     :> QueryParam "duration" Integer
     :> QueryParam "width" Integer
     :> QueryParam "height" Integer
@@ -97,49 +196,94 @@ type SendVideo' vid =
     :> QueryParam "supports_streaming" Bool
     :> MessageR
 
-type SendVideoU =
-  SendVideo' (MultipartForm Mem Video)
+type SendAnimation =
+  "sendAnimation"
+    :> ReqBody '[JSON] (AnimationMessage Text)
+    :> Res
 
-type SendVideo =
-  SendVideo' (QueryR "video" Text)
+data AnimationMessage a
+  = AnimationMessage
+      { chatId :: ChatId,
+        animation :: a,
+        duration :: Maybe Integer,
+        width :: Maybe Integer,
+        height :: Maybe Integer,
+        caption :: Maybe Text,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake (AnimationMessage a)
 
-type SendAnimation' animation =
+type SendAnimation' =
   "sendAnimation"
     :> QueryR "chat_id" ChatId
-    :> animation
+    :> MultipartForm Mem Animation
     :> QueryParam "duration" Integer
     :> QueryParam "width" Integer
     :> QueryParam "height" Integer
     :> QueryParam "caption" Text
     :> MessageR
 
-type SendAnimationU =
-  SendAnimation' (MultipartForm Mem Animation)
+type SendVoice =
+  "sendVoice"
+    :> ReqBody '[JSON] (VoiceMessage Text)
+    :> Res
 
-type SendAnimation =
-  SendAnimation' (QueryR "animation" Text)
+data VoiceMessage a
+  = VoiceMessage
+      { chatId :: ChatId,
+        voice :: a,
+        duration :: Maybe Integer,
+        caption :: Maybe Text,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake (VoiceMessage a)
 
-type SendVoice' voice =
+type SendVoice' =
   "sendVoice"
     :> QueryR "chat_id" ChatId
-    :> voice
+    :> MultipartForm Mem Voice
     :> QueryParam "duration" Integer
     :> QueryParam "caption" Text
     :> MessageR
 
-type SendVideoNote' vn =
+type SendVideoNote =
+  "sendVideoNote"
+    :> ReqBody '[JSON] (VideoNoteMessage Text)
+    :> Res
+
+data VideoNoteMessage a
+  = VideoNoteMessage
+      { chatId :: ChatId,
+        video_note :: Text,
+        duration :: Maybe Integer,
+        length :: Maybe Integer,
+        parseMode :: Maybe ParseMode,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving (ToJSON) via Snake (VideoNoteMessage a)
+
+type SendVideoNote' =
   "sendVideoNote"
     :> QueryR "chat_id" ChatId
-    :> vn
+    :> MultipartForm Mem VideoNote
     :> QueryParam "duration" Integer
     :> QueryParam "length" Integer
     :> MessageR
-
-type SendVideoNoteU =
-  SendVideoNote' (MultipartForm Mem VideoNote)
-
-type SendVideoNote =
-  SendVideoNote' (QueryR "video_note" Text)
 
 type SendMediaGroup =
   "sendMediaGroup"
@@ -147,85 +291,184 @@ type SendMediaGroup =
     :> CompoundParams Mem "media" VideoOrPhoto
     :> QueryParam "disable_notification" Bool
     :> QueryParam "reply_to_message_id" Integer
-    :> Get '[JSON] (ReqResult [Message])
+    :> Get '[JSON] (ReqResult [T.Message])
 
 type SendLocation =
   "sendLocation"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "latitude" Float
-    :> QueryR "longitude" Float
-    :> QueryParam "live_period" Integer
-    :> MessageR'
+    :> ReqBody '[JSON] LocationMessage
+    :> Res
+
+data LocationMessage
+  = LocationMessage
+      { chatId :: ChatId,
+        latitude :: Float,
+        longitude :: Float,
+        livePeriod :: Maybe Integer,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake LocationMessage
 
 type EditMessageLiveLocation =
   "editMessageLiveLocation"
-    :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
-    :> QueryParam "inline_message_id" Text
-    :> QueryR "latitude" Float
-    :> QueryR "longitude" Float
-    :> QueryParam "reply_markup" ReplyMarkup
-    :> Get '[JSON] (ReqResult (ReqEither Message Bool))
+    :> ReqBody '[JSON] LocationEdit
+    :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
+
+data LocationEdit
+  = LocationEdit
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        latitude :: Float,
+        longitude :: Float,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake LocationEdit
 
 type StopMessageLiveLocation =
   "stopMessageLiveLocation"
-    :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
-    :> QueryParam "inline_message_id" Text
-    :> QueryParam "reply_markup" ReplyMarkup
-    :> Get '[JSON] (ReqResult (ReqEither Message Bool))
+    :> ReqBody '[JSON] LocationStop
+    :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
+
+data LocationStop
+  = LocationStop
+      { chatId :: Maybe ChatId,
+        messageId :: Maybe Integer,
+        inlineMessageId :: Maybe Text,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake LocationStop
 
 type SendVenue =
   "sendVenue"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "latitude" Float
-    :> QueryR "longitude" Float
-    :> QueryR "title" Text
-    :> QueryR "address" Text
-    :> QueryParam "foursquare_id" Text
-    :> QueryParam "foursquare_type" Text
-    :> MessageR'
+    :> ReqBody '[JSON] VenueMessage
+    :> Res
+
+data VenueMessage
+  = VenueMessage
+      { chatId :: ChatId,
+        latitude :: Float,
+        longitude :: Float,
+        title :: Text,
+        address :: Text,
+        foursquareId :: Maybe Text,
+        foursquareType :: Maybe Text,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake VenueMessage
 
 type SendContact =
   "sendContact"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "phone_number" Text
-    :> QueryR "first_name" Text
-    :> QueryParam "last_name" Text
-    :> QueryParam "vcard" Text
-    :> MessageR'
+    :> ReqBody '[JSON] ContactMessage
+    :> Res
+
+data ContactMessage
+  = ContactMessage
+      { chatId :: ChatId,
+        phoneNumber :: Text,
+        firstName :: Text,
+        lastName :: Maybe Text,
+        vcard :: Maybe Text,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake ContactMessage
 
 type SendPoll =
   "sendPoll"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "question" Text
-    :> QueryR "options" [Text]
-    :> QueryParam "is_anonymous" Bool
-    :> QueryParam "type" Text
-    :> QueryParam "allows_multiple_answers" Bool
-    :> QueryParam "correct_option_id" Integer
-    :> QueryParam "is_closed" Bool
-    :> MessageR'
+    :> ReqBody '[JSON] PollMessage
+    :> Res
+
+data PollMessage
+  = PollMessage
+      { chatid :: ChatId,
+        question :: Text,
+        options :: [Text],
+        isAnonymous :: Bool,
+        pollType :: Maybe T.PollType,
+        allowsMultipleAnswers :: Maybe Bool,
+        correctOptionId :: Maybe Integer,
+        isClosed :: Maybe Bool,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via PrefixedSnake "poll" PollMessage
 
 type SendDice =
   "sendDice"
-    :> QueryR "chat_id" ChatId
-    :> MessageR'
+    :> ReqBody '[JSON] DiceMessage
+    :> Res
+
+data DiceMessage
+  = DiceMessage
+      { chatId :: ChatId,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake DiceMessage
 
 type SendChatAction =
   "sendChatAction"
-    :> QueryR "chat_id" ChatId
-    :> QueryR "action" Text
+    :> ReqBody '[JSON] ChatAction
     :> Get '[JSON] (ReqResult Bool)
+
+data ChatAction
+  = ChatAction
+      { chatId :: ChatId,
+        action :: Action
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via ChatAction
+
+data StickerMessage
+  = StickerMessage
+      { chatId :: ChatId,
+        sticker :: Text,
+        disableNotification :: Maybe Bool,
+        replyToMessageId :: Maybe Integer,
+        replyMarkup :: Maybe ReplyMarkup
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake StickerMessage
+
+type SendSticker =
+  "sendSticker"
+    :> ReqBody '[JSON] StickerMessage
+    :> Res
 
 type SendSticker' sticker =
   "sendSticker"
     :> QueryR "chat_id" ChatId
-    :> sticker
+    :> MultipartForm Mem Sticker
     :> MessageR'
-
-type SendStickerU =
-  SendSticker' (MultipartForm Mem Sticker)
-
-type SendSticker =
-  SendSticker' (QueryR "sticker" Text)

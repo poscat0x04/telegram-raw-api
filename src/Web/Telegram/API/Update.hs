@@ -1,36 +1,50 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Web.Telegram.API.Update where
 
 import Data.Text (Text)
+import Deriving.Aeson
 import Servant.API
-import Servant.Multipart
 import Web.Telegram.Types
-import Web.Telegram.Types.Input
+import Web.Telegram.Types.Stock
 import Web.Telegram.Types.Update
+
+data Polling
+  = Polling
+      { offset :: Maybe Integer,
+        limit :: Maybe Integer,
+        timeout :: Maybe Integer,
+        allowedUpdates :: Maybe Text
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake Polling
 
 type GetUpdates =
   "getUpdates"
-    :> QueryParam "offset" Integer
-    :> QueryParam "limit" Integer
-    :> QueryParam "timeout" Integer
-    :> QueryParam "allowed_updates" Text
+    :> ReqBody '[JSON] Polling
     :> Get '[JSON] (ReqResult [Update])
+
+data WebhookSetting
+  = WebhookSetting
+      { url :: Text,
+        maxConnections :: Maybe Integer,
+        allowedUpdates :: Maybe [Text]
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON)
+    via Snake WebhookSetting
 
 type SetWebhook =
   "setWebhook"
-    :> QueryParam' '[Required, Strict] "url" Text
-    :> QueryParam "max_connections" Integer
-    :> QueryParam "allowed_updates" [Text]
-    :> Get '[JSON] (ReqResult Bool)
-
-type SetWebhook' =
-  "setWebhook"
-    :> QueryParam' '[Required, Strict] "url" Text
-    :> MultipartForm Mem Cert
-    :> QueryParam "max_connections" Integer
-    :> QueryParam "allowed_updates" [Text]
+    :> ReqBody '[JSON] WebhookSetting
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteWebhook =
