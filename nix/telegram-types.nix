@@ -7,8 +7,8 @@ mkDerivation {
   version = "0.1.0.0";
   src = fetchgit {
     url = "https://github.com/poscat0x04/telegram-types";
-    sha256 = "1k4clz54gbyqsmc2p949wk7x4h50pkzvlzfy3d0vlplzziv3ch94";
-    rev = "942d6953a412e3c418890a98e9fb838e6485f135";
+    sha256 = "1vrzxy5fm20y0bnh3amw4qshbrq76k992l3h89kdgvbsvy37myy3";
+    rev = "dcaee11ccf6dbd7c15333596bde538bc6f27ebd9";
     fetchSubmodules = false;
   };
   libraryHaskellDepends = [
