@@ -27,12 +27,6 @@ data Polling
     (ToJSON)
     via Snake Polling
 
-type GetUpdates =
-  Base
-    :> "getUpdates"
-    :> ReqBody '[JSON] Polling
-    :> Get '[JSON] (ReqResult [Update])
-
 data WebhookSetting
   = WebhookSetting
       { url :: Text,
@@ -43,6 +37,12 @@ data WebhookSetting
   deriving
     (ToJSON)
     via Snake WebhookSetting
+
+type GetUpdates =
+  Base
+    :> "getUpdates"
+    :> ReqBody '[JSON] Polling
+    :> Get '[JSON] (ReqResult [Update])
 
 type SetWebhook =
   Base

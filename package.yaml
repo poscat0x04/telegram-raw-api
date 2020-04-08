@@ -26,12 +26,8 @@ dependencies:
 - bytestring
 - servant
 - servant-client
-- servant-client-core
 - servant-multipart
 - http-media
-- http-client
-- http-client-tls
-- http-client-overrides
 - connection
 - telegram-types
 - lens
@@ -39,6 +35,18 @@ dependencies:
 
 library:
   source-dirs: src
+  exposed-modules:
+    - Web.Telegram.API.Actions
+    - Web.Telegram.API.Actions.Data
+    - Web.Telegram.API.Editing
+    - Web.Telegram.API.Editing.Data
+    - Web.Telegram.API.Sending
+    - Web.Telegram.API.Sending.Data
+    - Web.Telegram.API.CompoundParam
+    - Web.Telegram.API.Getting
+    - Web.Telegram.API.Lens
+    - Web.Telegram.API.Update
+    - Web.Telegram.API
 
 tests:
   telegram-raw-api-test:
@@ -50,4 +58,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - telegram-raw-api
-    - lens
+    - http-client
+    - http-client-tls
+    - http-client-overrides
+    - servant-client-core

@@ -6,25 +6,69 @@
 {-# LANGUAGE TypeOperators #-}
 
 -- | Sending stuff
-module Web.Telegram.API.Sending where
+module Web.Telegram.API.Sending
+  ( SendMessage,
+    ForwardMessage,
+    SendPhoto,
+    SendPhoto',
+    SendAudio,
+    SendAudio',
+    SendDocument,
+    SendDocument',
+    SendVideo,
+    SendVideo',
+    SendAnimation,
+    SendAnimation',
+    SendVoice,
+    SendVoice',
+    SendVideoNote,
+    SendVideoNote',
+    SendMediaGroup,
+    SendLocation,
+    EditMessageLiveLocation,
+    StopMessageLiveLocation,
+    SendVenue,
+    SendContact,
+    SendPoll,
+    SendDice,
+    SendChatAction,
+    SendSticker,
+    SendSticker',
+    SMessage,
+    FwdMessage,
+    PhotoMessage,
+    AudioMessage,
+    DocMessage,
+    VidMessage,
+    AnimationMessage,
+    VoiceMessage,
+    VNMessage,
+    LocationEdit,
+    LocationStop,
+    VenueMessage,
+    ContactMessage,
+    PollMessage,
+    DiceMessage,
+    ChatAction,
+    StickerMessage,
+  )
+where
 
 import Data.Text (Text)
-import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
 import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
+import Web.Telegram.API.Sending.Data
 import Web.Telegram.Types
   ( ChatId (..),
-    Default (..),
+    ParseMode (..),
     QueryR,
-    ReqEither (..),
-    ReqResult (..),
   )
 import qualified Web.Telegram.Types as T
 import Web.Telegram.Types.Input
 import Web.Telegram.Types.Interaction
-import Web.Telegram.Types.Stock
+import Web.Telegram.Types.Update
 
 type MessageR' =
   QueryParam "disable_notification" Bool
@@ -42,23 +86,8 @@ type MessageR =
 type SendMessage =
   Base
     :> "sendMessage"
-    :> ReqBody '[JSON] Message
+    :> ReqBody '[JSON] SMessage
     :> Res
-
-data Message
-  = Message
-      { chatId :: ChatId,
-        text :: Text,
-        disableWebPagePreview :: Maybe Bool,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake Message
 
 type ForwardMessage =
   Base
@@ -66,39 +95,11 @@ type ForwardMessage =
     :> ReqBody '[JSON] FwdMessage
     :> Res
 
-data FwdMessage
-  = FwdMessage
-      { chatId :: ChatId,
-        fromChatId :: ChatId,
-        messageId :: Integer,
-        disableNotification :: Maybe Bool
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (FromJSON, ToJSON)
-    via Snake FwdMessage
-
 type SendPhoto =
   Base
     :> "sendPhoto"
     :> ReqBody '[JSON] (PhotoMessage Text)
     :> Res
-
-data PhotoMessage a
-  = PM
-      { chatId :: ChatId,
-        photo :: a,
-        caption :: Maybe Text,
-        disableWebPagePreview :: Maybe Bool,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake (PhotoMessage a)
 
 type SendPhoto' photo =
   Base
@@ -113,24 +114,6 @@ type SendAudio =
     :> "sendAudio"
     :> ReqBody '[JSON] (AudioMessage Text)
     :> Res
-
-data AudioMessage a
-  = AudioMessage
-      { chatId :: ChatId,
-        audio :: a,
-        caption :: Maybe Text,
-        duration :: Maybe Integer,
-        performer :: Maybe Text,
-        title :: Maybe Text,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake (AudioMessage a)
 
 type SendAudio' audio =
   Base
@@ -147,23 +130,8 @@ type SendAudio' audio =
 type SendDocument =
   Base
     :> "sendDocument"
-    :> ReqBody '[JSON] (DocumentMessage Text)
+    :> ReqBody '[JSON] (DocMessage Text)
     :> Res
-
-data DocumentMessage a
-  = DocumentMessage
-      { chatId :: ChatId,
-        document :: a,
-        caption :: Maybe Text,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake (DocumentMessage a)
 
 type SendDocument' doc =
   Base
@@ -176,24 +144,8 @@ type SendDocument' doc =
 type SendVideo =
   Base
     :> "sendVideo"
-    :> ReqBody '[JSON] (VideoMessage Text)
+    :> ReqBody '[JSON] (VidMessage Text)
     :> Res
-
-data VideoMessage a
-  = VideoMessage
-      { chatId :: ChatId,
-        video :: a,
-        duration :: Maybe Integer,
-        width :: Maybe Integer,
-        height :: Maybe Integer,
-        caption :: Maybe Text,
-        supportsStreaming :: Maybe Bool,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
 
 type SendVideo' =
   Base
@@ -213,24 +165,6 @@ type SendAnimation =
     :> ReqBody '[JSON] (AnimationMessage Text)
     :> Res
 
-data AnimationMessage a
-  = AnimationMessage
-      { chatId :: ChatId,
-        animation :: a,
-        duration :: Maybe Integer,
-        width :: Maybe Integer,
-        height :: Maybe Integer,
-        caption :: Maybe Text,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake (AnimationMessage a)
-
 type SendAnimation' =
   Base
     :> "sendAnimation"
@@ -248,22 +182,6 @@ type SendVoice =
     :> ReqBody '[JSON] (VoiceMessage Text)
     :> Res
 
-data VoiceMessage a
-  = VoiceMessage
-      { chatId :: ChatId,
-        voice :: a,
-        duration :: Maybe Integer,
-        caption :: Maybe Text,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake (VoiceMessage a)
-
 type SendVoice' =
   Base
     :> "sendVoice"
@@ -276,22 +194,8 @@ type SendVoice' =
 type SendVideoNote =
   Base
     :> "sendVideoNote"
-    :> ReqBody '[JSON] (VideoNoteMessage Text)
+    :> ReqBody '[JSON] (VNMessage Text)
     :> Res
-
-data VideoNoteMessage a
-  = VideoNoteMessage
-      { chatId :: ChatId,
-        video_note :: Text,
-        duration :: Maybe Integer,
-        length :: Maybe Integer,
-        parseMode :: Maybe ParseMode,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving (ToJSON) via Snake (VideoNoteMessage a)
 
 type SendVideoNote' =
   Base
@@ -317,40 +221,11 @@ type SendLocation =
     :> ReqBody '[JSON] LocationMessage
     :> Res
 
-data LocationMessage
-  = LocationMessage
-      { chatId :: ChatId,
-        latitude :: Float,
-        longitude :: Float,
-        livePeriod :: Maybe Integer,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake LocationMessage
-
 type EditMessageLiveLocation =
   Base
     :> "editMessageLiveLocation"
     :> ReqBody '[JSON] LocationEdit
     :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
-
-data LocationEdit
-  = LocationEdit
-      { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
-        inlineMessageId :: Maybe Text,
-        latitude :: Float,
-        longitude :: Float,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake LocationEdit
 
 type StopMessageLiveLocation =
   Base
@@ -358,41 +233,11 @@ type StopMessageLiveLocation =
     :> ReqBody '[JSON] LocationStop
     :> Get '[JSON] (ReqResult (ReqEither T.Message Bool))
 
-data LocationStop
-  = LocationStop
-      { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
-        inlineMessageId :: Maybe Text,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake LocationStop
-
 type SendVenue =
   Base
     :> "sendVenue"
     :> ReqBody '[JSON] VenueMessage
     :> Res
-
-data VenueMessage
-  = VenueMessage
-      { chatId :: ChatId,
-        latitude :: Float,
-        longitude :: Float,
-        title :: Text,
-        address :: Text,
-        foursquareId :: Maybe Text,
-        foursquareType :: Maybe Text,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake VenueMessage
 
 type SendContact =
   Base
@@ -400,46 +245,11 @@ type SendContact =
     :> ReqBody '[JSON] ContactMessage
     :> Res
 
-data ContactMessage
-  = ContactMessage
-      { chatId :: ChatId,
-        phoneNumber :: Text,
-        firstName :: Text,
-        lastName :: Maybe Text,
-        vcard :: Maybe Text,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake ContactMessage
-
 type SendPoll =
   Base
     :> "sendPoll"
     :> ReqBody '[JSON] PollMessage
     :> Res
-
-data PollMessage
-  = PollMessage
-      { chatid :: ChatId,
-        question :: Text,
-        options :: [Text],
-        isAnonymous :: Bool,
-        pollType :: Maybe T.PollType,
-        allowsMultipleAnswers :: Maybe Bool,
-        correctOptionId :: Maybe Integer,
-        isClosed :: Maybe Bool,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via PrefixedSnake "poll" PollMessage
 
 type SendDice =
   Base
@@ -447,46 +257,11 @@ type SendDice =
     :> ReqBody '[JSON] DiceMessage
     :> Res
 
-data DiceMessage
-  = DiceMessage
-      { chatId :: ChatId,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake DiceMessage
-
 type SendChatAction =
   Base
     :> "sendChatAction"
     :> ReqBody '[JSON] ChatAction
     :> Get '[JSON] (ReqResult Bool)
-
-data ChatAction
-  = ChatAction
-      { chatId :: ChatId,
-        action :: Action
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via ChatAction
-
-data StickerMessage
-  = StickerMessage
-      { chatId :: ChatId,
-        sticker :: Text,
-        disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
-        replyMarkup :: Maybe ReplyMarkup
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake StickerMessage
 
 type SendSticker =
   Base

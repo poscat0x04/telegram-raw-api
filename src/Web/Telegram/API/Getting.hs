@@ -7,6 +7,7 @@ import Data.Text (Text)
 import Servant.API
 import Web.Telegram.API.Common
 import Web.Telegram.Types
+import Web.Telegram.Types.Update
 
 type GetMe =
   Base

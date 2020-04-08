@@ -6,18 +6,51 @@
 {-# LANGUAGE TypeOperators #-}
 
 -- | Actions that the bot can perform
-module Web.Telegram.API.Actions where
+module Web.Telegram.API.Actions
+  ( KickChatMember,
+    Kick,
+    UnbanChatMember,
+    Unban,
+    RestrictChatMember,
+    Restriction,
+    PromoteChatMember,
+    Promotion,
+    SetChatAdministratorCustomTitle,
+    SetChatPermissions,
+    ExportChatInviteLink,
+    SetChatPhoto,
+    DeleteChatPhoto,
+    SetChatTitle,
+    SetChatDescription,
+    PinChatMessage,
+    UnpinChatMessage,
+    LeaveChat,
+    SetChatStickerSet,
+    DeleteChatStickerSet,
+    UploadStickerFileU,
+    UploadStickerFile,
+    CreateNewStickerSetU,
+    CreateNewStickerSet,
+    AddStickerToSetU,
+    AddStickerToSet,
+    SetStickerPositionInSet,
+    DeleteStickerFromSet,
+    SetStickerSetThumbU,
+    SetStickerSetThumb,
+    AnswerInlineQuery,
+    InlineQueryAnswer,
+  )
+where
 
 import Data.Text (Text)
-import Deriving.Aeson
 import Servant.API
 import Servant.Multipart
+import Web.Telegram.API.Actions.Data
 import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.Types
-import Web.Telegram.Types.Inline
 import Web.Telegram.Types.Input
-import Web.Telegram.Types.Stock
+import Web.Telegram.Types.Update
 
 type KickChatMember =
   Base
@@ -25,32 +58,11 @@ type KickChatMember =
     :> ReqBody '[JSON] Kick
     :> Get '[JSON] (ReqResult Bool)
 
-data Kick
-  = Kick
-      { chatId :: ChatId,
-        userId :: Integer,
-        untilDate :: Maybe Integer
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake Kick
-
 type UnbanChatMember =
   Base
     :> "unbanChatMember"
     :> ReqBody '[JSON] Unban
     :> Get '[JSON] (ReqResult Bool)
-
-data Unban
-  = Unban
-      { chatId :: ChatId,
-        userId :: Integer
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake Unban
 
 type RestrictChatMember =
   Base
@@ -58,41 +70,11 @@ type RestrictChatMember =
     :> ReqBody '[JSON] Restriction
     :> Get '[JSON] (ReqResult Bool)
 
-data Restriction
-  = Restriction
-      { chatId :: ChatId,
-        userId :: Integer,
-        permissions :: ChatPermissions,
-        untilDate :: Maybe Integer
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake Restriction
-
 type PromoteChatMember =
   Base
     :> "promoteChatMember"
     :> ReqBody '[JSON] Promotion
     :> Get '[JSON] (ReqResult Bool)
-
-data Promotion
-  = Promotion
-      { chatId :: ChatId,
-        userId :: Integer,
-        canChangeInfo :: Maybe Bool,
-        canPostMessages :: Maybe Bool,
-        canEditMessages :: Maybe Bool,
-        canDeleteMessages :: Maybe Bool,
-        canInviteUsers :: Maybe Bool,
-        canRestrictMembers :: Maybe Bool,
-        canPinMessages :: Maybe Bool,
-        canPromoteMembers :: Maybe Bool
-      }
-  deriving (Show, Eq, Generic, Default)
-  deriving
-    (ToJSON)
-    via Snake Promotion
 
 type SetChatAdministratorCustomTitle =
   Base
@@ -256,19 +238,3 @@ type AnswerInlineQuery =
     :> "answerInlineQuery"
     :> ReqBody '[JSON] InlineQueryAnswer
     :> Get '[JSON] (ReqResult Bool)
-
-data InlineQueryAnswer
-  = InlineQueryAnswer
-      { inlineQueryId :: Text,
-        results :: [InlineQueryResult],
-        cacheTime :: Maybe Integer,
-        isPersonal :: Maybe Bool,
-        nextOffset :: Maybe Text,
-        switchPmText :: Maybe Text,
-        switchPmParameter :: Maybe Text
-      }
-  deriving (Show, Eq, Generic)
-  deriving anyclass (Default)
-  deriving
-    (ToJSON, FromJSON)
-    via Snake InlineQueryAnswer
