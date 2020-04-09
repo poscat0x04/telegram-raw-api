@@ -24,7 +24,7 @@ data Polling
       }
   deriving (Show, Eq, Generic, Default)
   deriving
-    (ToJSON)
+    (ToJSON, FromJSON)
     via Snake Polling
 
 data WebhookSetting
@@ -35,7 +35,7 @@ data WebhookSetting
       }
   deriving (Show, Eq, Generic, Default)
   deriving
-    (ToJSON)
+    (ToJSON, FromJSON)
     via Snake WebhookSetting
 
 type GetUpdates =
