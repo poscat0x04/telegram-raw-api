@@ -238,3 +238,15 @@ type AnswerInlineQuery =
     :> "answerInlineQuery"
     :> ReqBody '[JSON] InlineQueryAnswer
     :> Get '[JSON] (ReqResult Bool)
+
+type AnswerCallbackQuery =
+  Base
+    :> "answerCallbackQuery"
+    :> ReqBody '[JSON] CallbackQueryAnswer
+    :> Get '[JSON] (ReqResult Bool)
+
+type SetMyCommands =
+  Base
+    :> "setMyCommands"
+    :> ReqBody '[JSON] CommandSet
+    :> Get '[JSON] (ReqResult Bool)

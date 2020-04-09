@@ -10,6 +10,7 @@ import Deriving.Aeson
 import Web.Telegram.Types
 import Web.Telegram.Types.Inline
 import Web.Telegram.Types.Stock
+import Web.Telegram.Types.Update
 
 data Kick
   = Kick
@@ -72,8 +73,29 @@ data InlineQueryAnswer
         switchPmText :: Maybe Text,
         switchPmParameter :: Maybe Text
       }
-  deriving (Show, Eq, Generic)
-  deriving anyclass (Default)
+  deriving (Show, Eq, Generic, Default)
   deriving
     (ToJSON, FromJSON)
     via Snake InlineQueryAnswer
+
+data CallbackQueryAnswer
+  = CQAns
+      { callbackQueryId :: Text,
+        text :: Maybe Text,
+        showAlert :: Maybe Bool,
+        url :: Maybe Text,
+        cacheTime :: Maybe Integer
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON, FromJSON)
+    via Snake CallbackQueryAnswer
+
+newtype CommandSet
+  = CommandSet
+      { commands :: [BotCommand]
+      }
+  deriving (Show, Eq, Generic, Default)
+  deriving
+    (ToJSON, FromJSON)
+    via Snake CommandSet
