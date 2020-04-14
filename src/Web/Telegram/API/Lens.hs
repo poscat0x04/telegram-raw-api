@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Web.Telegram.API.Lens
+module Web.Telegram.API.Lens {-# DEPRECATED "Use labels from generics-lens instead" #-}
   ( module Web.Telegram.Types.Lens,
     disableWebPagePreview,
     parseMode,
