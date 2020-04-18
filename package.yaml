@@ -29,7 +29,7 @@ dependencies:
 - servant-multipart >= 0.11.5    && < 0.12
 - http-media        >= 0.8.0.0   && < 0.9
 - connection        >= 0.3.1     && < 0.4
-- telegram-types    >= 0.1.0     && < 0.2
+- telegram-types    >= 0.2.0     && < 0.3
 - lens              >= 4.18.1    && < 4.19
 - generic-lens      >= 1.2.0.1   && < 1.3
 
