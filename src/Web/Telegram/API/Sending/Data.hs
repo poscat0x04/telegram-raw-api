@@ -1,13 +1,14 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE DataKinds #-}
 
 module Web.Telegram.API.Sending.Data where
 
 import Data.Text (Text)
 import Deriving.Aeson
+import Web.Telegram.API.Common
 import Web.Telegram.Types
 import Web.Telegram.Types.Interaction
 import Web.Telegram.Types.Stock

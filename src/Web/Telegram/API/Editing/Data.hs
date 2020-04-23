@@ -7,6 +7,7 @@ module Web.Telegram.API.Editing.Data where
 
 import Data.Text (Text)
 import Deriving.Aeson
+import Web.Telegram.API.Common
 import Web.Telegram.Types
 import Web.Telegram.Types.Input
 import Web.Telegram.Types.Interaction

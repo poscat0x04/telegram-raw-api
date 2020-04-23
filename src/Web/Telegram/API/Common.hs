@@ -1,17 +1,32 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Web.Telegram.API.Common where
 
-import Data.Text (Text)
-import GHC.Generics
-import Servant.API
 import Data.Aeson
+import Data.Hashable
+import Data.Int
 import Data.String
+import Data.Text (Text)
+import Deriving.Aeson
+import Servant.API
 import Web.Telegram.Types
+import Web.Telegram.Types.Stock
+
+data ChatId
+  = ChatId Int64
+  | ChanId Text
+  deriving (Show, Eq, Generic, Default, Hashable)
+  deriving (FromJSON, ToJSON) via UntaggedSum ChatId
+
+instance ToHttpApiData ChatId where
+  toQueryParam (ChatId i) = toQueryParam i
+  toQueryParam (ChanId t) = t
 
 newtype Token = Token Text
   deriving (Show, Eq, Generic)

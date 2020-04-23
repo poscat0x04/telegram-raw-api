@@ -5,6 +5,7 @@ module Web.Telegram.API
     module Web.Telegram.API.Actions,
     module Web.Telegram.API.Editing,
     Token (..),
+    ChatId (..),
   )
 where
 

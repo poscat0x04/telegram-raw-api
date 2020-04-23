@@ -1,37 +1,38 @@
-name:                telegram-raw-api
-version:             0.1.0
-github:              "poscat0x04/telegram-raw-api"
-license:             BSD3
-author:              "Poscat"
-maintainer:          "poscat@mail.poscat.moe"
-copyright:           "2020 Poscat"
+name: telegram-raw-api
+version: 0.1.0
+github: "poscat0x04/telegram-raw-api"
+license: BSD3
+author: "Poscat"
+maintainer: "poscat@mail.poscat.moe"
+copyright: "2020 Poscat"
 
 extra-source-files:
-- README.md
+  - README.md
 
 # Metadata used when publishing your package
-synopsis:            Servant bindings to the Telegram bot API
-category:            Web
+synopsis: Servant bindings to the Telegram bot API
+category: Web
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/poscat0x04/telegram-raw-api#readme>
+description: Please see the README on GitHub at <https://github.com/poscat0x04/telegram-raw-api#readme>
 
 dependencies:
-- base              >= 4.7       && < 5
-- aeson             >= 1.4.7     && < 1.5
-- deriving-aeson    >= 0.2.3     && < 0.3
-- text              >= 1.2.4.0   && < 1.3
-- bytestring        >= 0.10.10.0 && < 0.11
-- servant           >= 0.16.2    && < 0.17
-- servant-client    >= 0.16.0.1  && < 0.17
-- servant-multipart >= 0.11.5    && < 0.12
-- http-media        >= 0.8.0.0   && < 0.9
-- connection        >= 0.3.1     && < 0.4
-- telegram-types    >= 0.2.0     && < 0.3
-- lens              >= 4.18.1    && < 4.19
-- generic-lens      >= 1.2.0.1   && < 1.3
+  - base              >= 4.7       && < 5
+  - aeson             >= 1.4.7     && < 1.5
+  - deriving-aeson    >= 0.2.3     && < 0.3
+  - text              >= 1.2.4.0   && < 1.3
+  - bytestring        >= 0.10.10.0 && < 0.11
+  - servant           >= 0.16.2    && < 0.17
+  - servant-client    >= 0.16.0.1  && < 0.17
+  - servant-multipart >= 0.11.5    && < 0.12
+  - http-media        >= 0.8.0.0   && < 0.9
+  - connection        >= 0.3.1     && < 0.4
+  - telegram-types    ^>= 0.4.0
+  - lens              >= 4.18.1    && < 4.19
+  - generic-lens      >= 1.2.0.1   && < 1.3
+  - hashable          ^>= 1.3.0.0
 
 library:
   source-dirs: src
@@ -44,20 +45,19 @@ library:
     - Web.Telegram.API.Sending.Data
     - Web.Telegram.API.CompoundParam
     - Web.Telegram.API.Getting
-    - Web.Telegram.API.Lens
     - Web.Telegram.API.Update
     - Web.Telegram.API
 
 tests:
   telegram-raw-api-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - telegram-raw-api
-    - http-client         >= 0.6.4.1 && < 0.7
-    - http-client-tls     >= 0.3.5.3 && < 0.4
-    - servant-client-core >= 0.16    && < 0.17
+      - telegram-raw-api
+      - http-client         >= 0.6.4.1 && < 0.7
+      - http-client-tls     >= 0.3.5.3 && < 0.4
+      - servant-client-core >= 0.16    && < 0.17

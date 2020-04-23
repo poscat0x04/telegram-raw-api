@@ -61,8 +61,7 @@ import Web.Telegram.API.Common
 import Web.Telegram.API.CompoundParam
 import Web.Telegram.API.Sending.Data
 import Web.Telegram.Types
-  ( ChatId (..),
-    ParseMode (..),
+  ( ParseMode (..),
     QueryR,
   )
 import qualified Web.Telegram.Types as T
