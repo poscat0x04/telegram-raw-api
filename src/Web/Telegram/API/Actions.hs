@@ -37,8 +37,11 @@ module Web.Telegram.API.Actions
     DeleteStickerFromSet,
     SetStickerSetThumbU,
     SetStickerSetThumb,
+    SetMyCommands,
     AnswerInlineQuery,
     InlineQueryAnswer,
+    AnswerCallbackQuery,
+    CallbackQueryAnswer,
   )
 where
 
