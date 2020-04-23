@@ -17,9 +17,9 @@ type GetMe =
 type GetUserProfilePhotos =
   Base
     :> "getUserProfilePhotos"
-    :> QueryR "user_id" Integer
-    :> QueryParam "offset" Integer
-    :> QueryParam "limit" Integer
+    :> QueryR "user_id" Int
+    :> QueryParam "offset" Int
+    :> QueryParam "limit" Int
     :> Get '[JSON] (ReqResult UserProfilePhotos)
 
 type GetFile =
@@ -44,13 +44,13 @@ type GetChatMembersCount =
   Base
     :> "getChatMembersCount"
     :> QueryR "chat_id" ChatId
-    :> Get '[JSON] (ReqResult Integer)
+    :> Get '[JSON] (ReqResult Int)
 
 type GetChatMember =
   Base
     :> "getChatMember"
     :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> Get '[JSON] (ReqResult ChatMember)
 
 type GetMyCommands =

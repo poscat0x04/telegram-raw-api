@@ -8,4 +8,5 @@ nixpkgs: pkgs: with pkgs;
   http-client-tls
   http-client-overrides
   (callPackage ./nix/telegram-types.nix {})
+  time
 ]

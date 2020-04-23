@@ -16,7 +16,7 @@ import Web.Telegram.Types.Stock
 data TextEdit
   = TextE
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         text :: Text,
         parseMode :: Maybe ParseMode,
@@ -31,7 +31,7 @@ data TextEdit
 data CaptionEdit
   = CaptionE
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         caption :: Maybe Text,
         parseMode :: Maybe ParseMode,
@@ -45,7 +45,7 @@ data CaptionEdit
 data MediaEdit
   = MediaE
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         media :: InputMedia
       }
@@ -57,7 +57,7 @@ data MediaEdit
 data MarkupEdit
   = MarkupEdit
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         replyMarkup :: Maybe InlineKeyboardMarkup
       }
@@ -69,7 +69,7 @@ data MarkupEdit
 data PollStop
   = PollStop
       { chatId :: ChatId,
-        messageId :: Integer,
+        messageId :: Int,
         replyMarkup :: Maybe InlineKeyboardMarkup
       }
   deriving (Show, Eq, Generic, Default)

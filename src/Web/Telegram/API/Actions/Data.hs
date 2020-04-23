@@ -6,6 +6,7 @@
 module Web.Telegram.API.Actions.Data where
 
 import Data.Text (Text)
+import Data.Time.Clock.POSIX
 import Deriving.Aeson
 import Web.Telegram.API.Common
 import Web.Telegram.Types
@@ -16,8 +17,8 @@ import Web.Telegram.Types.Update
 data Kick
   = Kick
       { chatId :: ChatId,
-        userId :: Integer,
-        untilDate :: Maybe Integer
+        userId :: Int,
+        untilDate :: Maybe POSIXTime
       }
   deriving (Show, Eq, Generic, Default)
   deriving
@@ -27,7 +28,7 @@ data Kick
 data Unban
   = Unban
       { chatId :: ChatId,
-        userId :: Integer
+        userId :: Int
       }
   deriving (Show, Eq, Generic, Default)
   deriving
@@ -37,9 +38,9 @@ data Unban
 data Restriction
   = Restriction
       { chatId :: ChatId,
-        userId :: Integer,
+        userId :: Int,
         permissions :: ChatPermissions,
-        untilDate :: Maybe Integer
+        untilDate :: Maybe POSIXTime
       }
   deriving (Show, Eq, Generic, Default)
   deriving
@@ -49,7 +50,7 @@ data Restriction
 data Promotion
   = Promotion
       { chatId :: ChatId,
-        userId :: Integer,
+        userId :: Int,
         canChangeInfo :: Maybe Bool,
         canPostMessages :: Maybe Bool,
         canEditMessages :: Maybe Bool,
@@ -68,7 +69,7 @@ data InlineQueryAnswer
   = InlineQueryAnswer
       { inlineQueryId :: Text,
         results :: [InlineQueryResult],
-        cacheTime :: Maybe Integer,
+        cacheTime :: Maybe Int,
         isPersonal :: Maybe Bool,
         nextOffset :: Maybe Text,
         switchPmText :: Maybe Text,
@@ -85,7 +86,7 @@ data CallbackQueryAnswer
         text :: Maybe Text,
         showAlert :: Maybe Bool,
         url :: Maybe Text,
-        cacheTime :: Maybe Integer
+        cacheTime :: Maybe Int
       }
   deriving (Show, Eq, Generic, Default)
   deriving

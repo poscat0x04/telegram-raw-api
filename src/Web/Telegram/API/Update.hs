@@ -18,9 +18,9 @@ import Web.Telegram.Types.UpdateType
 
 data Polling
   = Polling
-      { offset :: Maybe Integer,
-        limit :: Maybe Integer,
-        timeout :: Maybe Integer,
+      { offset :: Maybe Int,
+        limit :: Maybe Int,
+        timeout :: Maybe Int,
         allowedUpdates :: Maybe Text
       }
   deriving (Show, Eq, Generic, Default)
@@ -31,7 +31,7 @@ data Polling
 data WebhookSetting
   = WebhookSetting
       { url :: Text,
-        maxConnections :: Maybe Integer,
+        maxConnections :: Maybe Int,
         allowedUpdates :: Maybe [UpdateType]
       }
   deriving (Show, Eq, Generic, Default)

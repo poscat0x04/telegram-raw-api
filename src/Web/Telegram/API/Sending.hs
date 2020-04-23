@@ -71,7 +71,7 @@ import Web.Telegram.Types.Update
 
 type MessageR' =
   QueryParam "disable_notification" Bool
-    :> QueryParam "reply_to_message_id" Integer
+    :> QueryParam "reply_to_message_id" Int
     :> QueryParam "reply_markup" ReplyMarkup
     :> Get '[JSON] (ReqResult T.Message)
 
@@ -120,7 +120,7 @@ type SendAudio' audio =
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Audio
     :> QueryParam "caption" Text
-    :> QueryParam "duration" Integer
+    :> QueryParam "duration" Int
     :> QueryParam "performer" Text
     :> QueryParam "title" Text
     -- TODO: Handle thumbnail
@@ -151,9 +151,9 @@ type SendVideo' =
     :> "sendVideo"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Video
-    :> QueryParam "duration" Integer
-    :> QueryParam "width" Integer
-    :> QueryParam "height" Integer
+    :> QueryParam "duration" Int
+    :> QueryParam "width" Int
+    :> QueryParam "height" Int
     :> QueryParam "caption" Text
     :> QueryParam "supports_streaming" Bool
     :> MessageR
@@ -169,9 +169,9 @@ type SendAnimation' =
     :> "sendAnimation"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Animation
-    :> QueryParam "duration" Integer
-    :> QueryParam "width" Integer
-    :> QueryParam "height" Integer
+    :> QueryParam "duration" Int
+    :> QueryParam "width" Int
+    :> QueryParam "height" Int
     :> QueryParam "caption" Text
     :> MessageR
 
@@ -186,7 +186,7 @@ type SendVoice' =
     :> "sendVoice"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem Voice
-    :> QueryParam "duration" Integer
+    :> QueryParam "duration" Int
     :> QueryParam "caption" Text
     :> MessageR
 
@@ -201,8 +201,8 @@ type SendVideoNote' =
     :> "sendVideoNote"
     :> QueryR "chat_id" ChatId
     :> MultipartForm Mem VideoNote
-    :> QueryParam "duration" Integer
-    :> QueryParam "length" Integer
+    :> QueryParam "duration" Int
+    :> QueryParam "length" Int
     :> MessageR
 
 type SendMediaGroup =
@@ -211,7 +211,7 @@ type SendMediaGroup =
     :> QueryR "chat_id" ChatId
     :> CompoundParams Mem "media" VideoOrPhoto
     :> QueryParam "disable_notification" Bool
-    :> QueryParam "reply_to_message_id" Integer
+    :> QueryParam "reply_to_message_id" Int
     :> Get '[JSON] (ReqResult [T.Message])
 
 type SendLocation =

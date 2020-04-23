@@ -20,7 +20,7 @@ data SMessage
         disableWebPagePreview :: Maybe Bool,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -32,7 +32,7 @@ data FwdMessage
   = FwdMsg
       { chatId :: ChatId,
         fromChatId :: ChatId,
-        messageId :: Integer,
+        messageId :: Int,
         disableNotification :: Maybe Bool
       }
   deriving (Show, Eq, Generic, Default)
@@ -48,7 +48,7 @@ data PhotoMessage a
         disableWebPagePreview :: Maybe Bool,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -61,12 +61,12 @@ data AudioMessage a
       { chatId :: ChatId,
         audio :: a,
         caption :: Maybe Text,
-        duration :: Maybe Integer,
+        duration :: Maybe Int,
         performer :: Maybe Text,
         title :: Maybe Text,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -81,7 +81,7 @@ data DocMessage a
         caption :: Maybe Text,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -93,14 +93,14 @@ data VidMessage a
   = VidMsg
       { chatId :: ChatId,
         video :: a,
-        duration :: Maybe Integer,
-        width :: Maybe Integer,
-        height :: Maybe Integer,
+        duration :: Maybe Int,
+        width :: Maybe Int,
+        height :: Maybe Int,
         caption :: Maybe Text,
         supportsStreaming :: Maybe Bool,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -112,13 +112,13 @@ data AnimationMessage a
   = AniMsg
       { chatId :: ChatId,
         animation :: a,
-        duration :: Maybe Integer,
-        width :: Maybe Integer,
-        height :: Maybe Integer,
+        duration :: Maybe Int,
+        width :: Maybe Int,
+        height :: Maybe Int,
         caption :: Maybe Text,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -130,11 +130,11 @@ data VoiceMessage a
   = VoiceMsg
       { chatId :: ChatId,
         voice :: a,
-        duration :: Maybe Integer,
+        duration :: Maybe Int,
         caption :: Maybe Text,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -146,11 +146,11 @@ data VNMessage a
   = VNMsg
       { chatId :: ChatId,
         video_note :: Text,
-        duration :: Maybe Integer,
-        length :: Maybe Integer,
+        duration :: Maybe Int,
+        length :: Maybe Int,
         parseMode :: Maybe ParseMode,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -161,9 +161,9 @@ data LocationMessage
       { chatId :: ChatId,
         latitude :: Float,
         longitude :: Float,
-        livePeriod :: Maybe Integer,
+        livePeriod :: Maybe Int,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -174,7 +174,7 @@ data LocationMessage
 data LocationEdit
   = LocationEdit
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         latitude :: Float,
         longitude :: Float,
@@ -188,7 +188,7 @@ data LocationEdit
 data LocationStop
   = LocationStop
       { chatId :: Maybe ChatId,
-        messageId :: Maybe Integer,
+        messageId :: Maybe Int,
         inlineMessageId :: Maybe Text,
         replyMarkup :: Maybe ReplyMarkup
       }
@@ -207,7 +207,7 @@ data VenueMessage
         foursquareId :: Maybe Text,
         foursquareType :: Maybe Text,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -223,7 +223,7 @@ data ContactMessage
         lastName :: Maybe Text,
         vcard :: Maybe Text,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -239,10 +239,10 @@ data PollMessage
         isAnonymous :: Bool,
         pollType :: Maybe PollType,
         allowsMultipleAnswers :: Maybe Bool,
-        correctOptionId :: Maybe Integer,
+        correctOptionId :: Maybe Int,
         isClosed :: Maybe Bool,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -254,7 +254,7 @@ data DiceMessage
   = DiceMessage
       { chatId :: ChatId,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)
@@ -277,7 +277,7 @@ data StickerMessage
       { chatId :: ChatId,
         sticker :: Text,
         disableNotification :: Maybe Bool,
-        replyToMessageId :: Maybe Integer,
+        replyToMessageId :: Maybe Int,
         replyMarkup :: Maybe ReplyMarkup
       }
   deriving (Show, Eq, Generic, Default)

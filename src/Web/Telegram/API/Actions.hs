@@ -83,7 +83,7 @@ type SetChatAdministratorCustomTitle =
   Base
     :> "setChatAdministratorCustomTitle"
     :> QueryR "chat_id" ChatId
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> QueryParam "custom_title" Text
     :> Get '[JSON] (ReqResult Bool)
 
@@ -131,7 +131,7 @@ type PinChatMessage =
   Base
     :> "pinChatMessage"
     :> QueryR "chat_id" ChatId
-    :> QueryR "message_id" Integer
+    :> QueryR "message_id" Int
     :> QueryParam "disable_notification" Bool
     :> Get '[JSON] (ReqResult Bool)
 
@@ -163,7 +163,7 @@ type DeleteChatStickerSet =
 type UploadStickerFile' png =
   Base
     :> "uploadStickerFile"
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> png
     :> Get '[JSON] (ReqResult File)
 
@@ -176,7 +176,7 @@ type UploadStickerFile =
 type CreateNewStickerSet' png =
   Base
     :> "createNewStickerSet"
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> QueryR "name" Text
     :> QueryR "title" Text
     :> png
@@ -195,7 +195,7 @@ type CreateNewStickerSet =
 type AddStickerToSet' png =
   Base
     :> "addStickerToSet"
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> QueryR "name" Text
     :> png
     :> MultipartForm Mem TgsSticker
@@ -213,7 +213,7 @@ type SetStickerPositionInSet =
   Base
     :> "setStickerPositionInSet"
     :> QueryR "sticker" Text
-    :> QueryR "positon" Integer
+    :> QueryR "positon" Int
     :> Get '[JSON] (ReqResult Bool)
 
 type DeleteStickerFromSet =
@@ -226,7 +226,7 @@ type SetStickerSetThumb' t =
   Base
     :> "setStickerSetThumb"
     :> QueryR "name" Text
-    :> QueryR "user_id" Integer
+    :> QueryR "user_id" Int
     :> t
     :> Get '[JSON] (ReqResult Bool)
 

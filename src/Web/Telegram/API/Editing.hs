@@ -49,7 +49,7 @@ type EditMessageMedia =
   Base
     :> "editMessageMedia"
     :> QueryParam "chat_id" ChatId
-    :> QueryParam "message_id" Integer
+    :> QueryParam "message_id" Int
     :> QueryParam "inline_message_id" Text
     :> CompoundParam Mem "media" InputMedia
     :> Res
@@ -70,5 +70,5 @@ type DeleteMessage =
   Base
     :> "deleteMessage"
     :> QueryR "chat_id" ChatId
-    :> QueryR "message_id" Integer
+    :> QueryR "message_id" Int
     :> Get '[JSON] (ReqResult Bool)
